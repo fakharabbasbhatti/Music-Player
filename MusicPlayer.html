@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Music Player UI</title>
+  <!-- Bootstrap -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <div class="container d-flex justify-content-center align-items-center vh-100">
+    <div class="player card shadow-lg text-center p-4">
+      <h4 class="mb-3">🎵 Music Player</h4>
+
+      <div class="album-art mb-3">
+        <img id="album-cover" src="https://i.imgur.com/8Km9tLL.jpg" alt="Album Art" class="rounded-circle shadow">
+      </div>
+
+      <h5 id="song-title" class="fw-bold">Shape of You</h5>
+      <p id="artist-name" class="text-muted mb-3">Ed Sheeran</p>
+
+      <audio id="audio" src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3"></audio>
+
+      <div class="controls d-flex justify-content-center gap-4 my-3">
+        <button class="btn btn-light rounded-circle" id="prev"><i class="fas fa-backward"></i></button>
+        <button class="btn btn-primary rounded-circle play-btn" id="play"><i class="fas fa-play"></i></button>
+        <button class="btn btn-light rounded-circle" id="next"><i class="fas fa-forward"></i></button>
+      </div>
+
+      <input type="range" id="progress" value="0" class="form-range">
+
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
