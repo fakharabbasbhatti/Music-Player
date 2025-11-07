@@ -3,40 +3,240 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Music Player UI</title>
+  <title>Music Player</title>
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="https://cdn-icons-png.flaticon.com/512/727/727245.png">
+
   <!-- Bootstrap -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
   <!-- Font Awesome -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-  <!-- Custom CSS -->
-  <link rel="stylesheet" href="style.css">
-</head>
-<body>
 
+  <style>
+    body {
+      background: linear-gradient(135deg, #1e1f29, #3a0ca3, #7209b7);
+      font-family: 'Poppins', sans-serif;
+      color: #fff;
+      overflow: hidden;
+    }
+
+    .player {
+      width: 360px;
+      border-radius: 25px;
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    }
+
+    .text-gradient {
+      background: linear-gradient(to right, #ff8a00, #e52e71);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .album-art img {
+      width: 180px;
+      height: 180px;
+      border: 4px solid #fff;
+      border-radius: 50%;
+      object-fit: cover;
+      transition: transform 0.5s ease;
+    }
+
+    .album-art img.rotate {
+      animation: rotate 10s linear infinite;
+    }
+
+    @keyframes rotate {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+
+    .btn-control {
+      width: 55px;
+      height: 55px;
+      font-size: 1.3rem;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    }
+
+    #progress {
+      accent-color: #e52e71;
+    }
+
+    #time-display {
+      font-size: 0.8rem;
+      opacity: 0.8;
+    }
+  </style>
+</head>
+
+<body>
   <div class="container d-flex justify-content-center align-items-center vh-100">
-    <div class="player card shadow-lg text-center p-4">
-      <h4 class="mb-3">🎵 Music Player</h4>
+    <div class="player card text-center p-4">
+      <h4 class="mb-3 fw-bold text-gradient">🎵 Arijit & Atif Music Player</h4>
 
       <div class="album-art mb-3">
-        <img id="album-cover" src="https://i.imgur.com/8Km9tLL.jpg" alt="Album Art" class="rounded-circle shadow">
+        <img id="album-cover" src="https://i.imgur.com/8Km9tLL.jpg" alt="Album Art">
       </div>
 
-      <h5 id="song-title" class="fw-bold">Shape of You</h5>
-      <p id="artist-name" class="text-muted mb-3">Ed Sheeran</p>
+      <h5 id="song-title" class="fw-bold">Loading...</h5>
+      <p id="artist-name" class="text-muted mb-3"></p>
 
-      <audio id="audio" src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3"></audio>
+      <audio id="audio"></audio>
 
-      <div class="controls d-flex justify-content-center gap-4 my-3">
-        <button class="btn btn-light rounded-circle" id="prev"><i class="fas fa-backward"></i></button>
-        <button class="btn btn-primary rounded-circle play-btn" id="play"><i class="fas fa-play"></i></button>
-        <button class="btn btn-light rounded-circle" id="next"><i class="fas fa-forward"></i></button>
+      <div class="controls d-flex justify-content-center align-items-center gap-4 my-3">
+        <button class="btn btn-light rounded-circle btn-control" id="prev"><i class="fas fa-backward"></i></button>
+        <button class="btn btn-primary rounded-circle btn-control" id="play"><i class="fas fa-play"></i></button>
+        <button class="btn btn-light rounded-circle btn-control" id="next"><i class="fas fa-forward"></i></button>
       </div>
 
-      <input type="range" id="progress" value="0" class="form-range">
-
+      <input type="range" id="progress" value="0" class="form-range mb-2">
+      <small id="time-display" class="text-light"></small>
     </div>
   </div>
 
-  <script src="script.js"></script>
+  <script>
+    const songs = [
+      // --- Arijit Singh Songs ---
+      {
+        title: "Tum Hi Ho",
+        artist: "Arijit Singh",
+        src: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3",
+        cover: "https://upload.wikimedia.org/wikipedia/en/9/9f/Aashiqui_2_soundtrack_cover.jpg"
+      },
+      {
+        title: "Channa Mereya",
+        artist: "Arijit Singh",
+        src: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3",
+        cover: "https://upload.wikimedia.org/wikipedia/en/f/fb/Ae_Dil_Hai_Mushkil_poster.jpg"
+      },
+      {
+        title: "Raabta",
+        artist: "Arijit Singh",
+        src: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3",
+        cover: "https://upload.wikimedia.org/wikipedia/en/d/dc/Raabta_2017_film_poster.jpg"
+      },
+      {
+        title: "Gerua",
+        artist: "Arijit Singh",
+        src: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-4.mp3",
+        cover: "https://upload.wikimedia.org/wikipedia/en/b/b5/Dilwale_poster.jpg"
+      },
+      {
+        title: "Agar Tum Saath Ho",
+        artist: "Arijit Singh",
+        src: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-5.mp3",
+        cover: "https://upload.wikimedia.org/wikipedia/en/8/8e/Tamasha_Poster.jpg"
+      },
+
+      // --- Atif Aslam Songs ---
+      {
+        title: "Tera Hone Laga Hoon",
+        artist: "Atif Aslam",
+        src: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-6.mp3",
+        cover: "https://upload.wikimedia.org/wikipedia/en/2/2c/Ajab_Prem_Ki_Ghazab_Kahani.jpg"
+      },
+      {
+        title: "Jeene Laga Hoon",
+        artist: "Atif Aslam",
+        src: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-7.mp3",
+        cover: "https://upload.wikimedia.org/wikipedia/en/2/2b/Ramaiya_Vastavaiya.jpg"
+      },
+      {
+        title: "Tera Ban Jaunga",
+        artist: "Atif Aslam",
+        src: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-8.mp3",
+        cover: "https://upload.wikimedia.org/wikipedia/en/4/4e/Kabir_Singh_poster.jpg"
+      },
+      {
+        title: "Pehli Nazar Mein",
+        artist: "Atif Aslam",
+        src: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-9.mp3",
+        cover: "https://upload.wikimedia.org/wikipedia/en/d/d1/Race_poster.jpg"
+      },
+      {
+        title: "Dil Diyan Gallan",
+        artist: "Atif Aslam",
+        src: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-10.mp3",
+        cover: "https://upload.wikimedia.org/wikipedia/en/4/47/Tiger_Zinda_Hai_-_Poster.jpg"
+      }
+    ];
+
+    let currentSong = 0;
+    const audio = document.getElementById('audio');
+    const playBtn = document.getElementById('play');
+    const prevBtn = document.getElementById('prev');
+    const nextBtn = document.getElementById('next');
+    const progress = document.getElementById('progress');
+    const cover = document.getElementById('album-cover');
+    const title = document.getElementById('song-title');
+    const artist = document.getElementById('artist-name');
+    const timeDisplay = document.getElementById('time-display');
+
+    function loadSong(index) {
+      const song = songs[index];
+      title.textContent = song.title;
+      artist.textContent = song.artist;
+      cover.src = song.cover;
+      audio.src = song.src;
+      progress.value = 0;
+    }
+
+    function playSong() {
+      audio.play();
+      playBtn.innerHTML = '<i class="fas fa-pause"></i>';
+      cover.classList.add('rotate');
+    }
+
+    function pauseSong() {
+      audio.pause();
+      playBtn.innerHTML = '<i class="fas fa-play"></i>';
+      cover.classList.remove('rotate');
+    }
+
+    playBtn.addEventListener('click', () => {
+      if (audio.paused) {
+        playSong();
+      } else {
+        pauseSong();
+      }
+    });
+
+    nextBtn.addEventListener('click', () => {
+      currentSong = (currentSong + 1) % songs.length;
+      loadSong(currentSong);
+      playSong();
+    });
+
+    prevBtn.addEventListener('click', () => {
+      currentSong = (currentSong - 1 + songs.length) % songs.length;
+      loadSong(currentSong);
+      playSong();
+    });
+
+    audio.addEventListener('timeupdate', () => {
+      if (audio.duration) {
+        progress.value = (audio.currentTime / audio.duration) * 100;
+        const current = formatTime(audio.currentTime);
+        const total = formatTime(audio.duration);
+        timeDisplay.textContent = `${current} / ${total}`;
+      }
+    });
+
+    progress.addEventListener('input', () => {
+      audio.currentTime = (progress.value / 100) * audio.duration;
+    });
+
+    function formatTime(seconds) {
+      const min = Math.floor(seconds / 60);
+      const sec = Math.floor(seconds % 60);
+      return `${min}:${sec < 10 ? '0' : ''}${sec}`;
+    }
+
+    // Initialize
+    loadSong(currentSong);
+  </script>
 </body>
 </html>
